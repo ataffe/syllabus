@@ -23,7 +23,9 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/add_button_img"
-                android:background="@color/blue"/>
+                android:layout_margin="10dp"
+                android:background="@color/blue"
+                android:contentDescription="@string/add_button_description" />
 
         </RelativeLayout>
 
