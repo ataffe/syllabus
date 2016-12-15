@@ -22,12 +22,16 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
+                android:src="@mipmap/launcher_icon2"
+                android:onClick="mainToAdd"
+                android:background="?attr/colorPrimary"
+                android:contentDescription="@string/add_button_description"
+                android:id="@+id/imageButton"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/add_button_img"
-                android:layout_margin="10dp"
-                android:background="@color/blue"
-                android:contentDescription="@string/add_button_description" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="13dp"
+                android:layout_marginEnd="13dp" />
 
         </RelativeLayout>
 
