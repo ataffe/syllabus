@@ -13,15 +13,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 
 public class AddAssignment extends AppCompatActivity {
     public int[] date;
+    public EditText dateText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_assignment);
         date = new int[3];
+        dateText = (EditText) this.findViewById(R.id.editText2);
+        initUIElements();
+    }
+
+    public void initUIElements(){
+        dateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    showDatePickerDialog(view);
+                }
+            }
+        });
     }
 
     public void addToHome(View view){
@@ -54,6 +69,8 @@ public class AddAssignment extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day){
             //do something
+            EditText dateInput = (EditText) this.getActivity().findViewById(R.id.editText2);
+            dateInput.setText(month + "/" + day + "/" + year);
         }
     }
 }
