@@ -37,15 +37,20 @@
 
         </android.support.v7.widget.Toolbar>
 
-    <android.widget.CalendarView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <ListView
+    <CalendarView
+        android:id="@+id/main_calendar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.68" />
+
+    <ExpandableListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/assignments_listview"
+        android:layout_weight="0.32"
+        android:groupIndicator="@null"
+        android:divider="@color/blueGrey"
+        android:dividerHeight="1dp"/>
 
 
 
