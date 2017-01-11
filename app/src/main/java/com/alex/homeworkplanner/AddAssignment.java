@@ -2,6 +2,7 @@ package com.alex.homeworkplanner;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Build;
@@ -9,7 +10,10 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -18,6 +22,8 @@ public class AddAssignment extends AppCompatActivity {
     public int[] date;
     public EditText dateText;
     public Planner organizer;
+    public final String Tag = "ADD ASSIGNMENT - ";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,22 @@ public class AddAssignment extends AppCompatActivity {
                 if(b){
                     showDatePickerDialog(view);
                 }
+            }
+        });
+
+
+        final EditText pts = (EditText) findViewById(R.id.ptsField);
+        pts.setOnKeyListener(new View.OnKeyListener() {
+            boolean retValue = false;
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN)
+                        && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    manager.hideSoftInputFromWindow(pts.getWindowToken(),0);
+                    retValue = true;
+                }
+                return retValue;
             }
         });
 
@@ -77,6 +99,8 @@ public class AddAssignment extends AppCompatActivity {
         className = classNameField.getText().toString();
         ptsWorth = ptsField.getText().toString();
 
+        Log.d(Tag,"class name: " + className + "\n");
+
         if(testField.isChecked()){
             isTest = true;
         }
@@ -86,6 +110,7 @@ public class AddAssignment extends AppCompatActivity {
 
         if(!(organizer.getCourse(className).getClassName().equals("none"))){
             newCourse = new course(className);
+            Log.d(Tag,"giving new course a name new name");
         }else{
             newCourse = organizer.getCourse(className);
         }
@@ -99,6 +124,7 @@ public class AddAssignment extends AppCompatActivity {
 
     public void showDatePickerDialog(View view){
         DialogFragment fragment = new DatePickerFragment();
+
         fragment.show(getSupportFragmentManager(), "datePicker");
     }
 
@@ -114,6 +140,10 @@ public class AddAssignment extends AppCompatActivity {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
+            if(month < 1){
+                month = 1;
+            }
+
             //Create a new Instance of TimePickerDialog and return it
             return new DatePickerDialog(getActivity(),this,year,month,day);
         }
@@ -122,6 +152,9 @@ public class AddAssignment extends AppCompatActivity {
             //do something
             EditText dateInput = (EditText) this.getActivity().findViewById(R.id.dueDateField);
             dateInput.setText(month + "/" + day + "/" + year);
+
+            EditText typeText = (EditText) this.getActivity().findViewById(R.id.typeField);
+            typeText.requestFocus();
         }
     }
 }
