@@ -65,13 +65,18 @@ public class Planner implements Parcelable {
 
     public course getCourse(String name){
         course retValue = new course("none");
-        for(int iterator = 0; iterator < classes.size() -1; iterator++){
+
+        for(int iterator = 0; iterator < classes.size(); iterator++){
             if(name.toLowerCase().equals(classes.get(iterator).getClassName().toLowerCase())){
                 retValue = classes.get(iterator);
             }
         }
 
         return retValue;
+    }
+
+    public int getNumCourses(){
+        return classes.size();
     }
 
 }

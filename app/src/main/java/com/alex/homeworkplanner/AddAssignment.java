@@ -73,6 +73,7 @@ public class AddAssignment extends AppCompatActivity {
     public void addToHomepageSave(View view){
         Intent intent = new Intent(this,MainPage.class);
         saveAssignment();
+        Log.d(Tag,organizer.getCourse(0).getClassName());
         intent.putExtra("thePlanner",organizer);
         startActivity(intent);
     }
@@ -99,8 +100,6 @@ public class AddAssignment extends AppCompatActivity {
         className = classNameField.getText().toString();
         ptsWorth = ptsField.getText().toString();
 
-        Log.d(Tag,"class name: " + className + "\n");
-
         if(testField.isChecked()){
             isTest = true;
         }
@@ -108,9 +107,8 @@ public class AddAssignment extends AppCompatActivity {
         course newCourse;
 
 
-        if(!(organizer.getCourse(className).getClassName().equals("none"))){
+        if((organizer.getCourse(className).getClassName().equals("none"))){
             newCourse = new course(className);
-            Log.d(Tag,"giving new course a name new name");
         }else{
             newCourse = organizer.getCourse(className);
         }
