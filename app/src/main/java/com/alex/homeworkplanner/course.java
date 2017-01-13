@@ -16,6 +16,7 @@ public class course implements Parcelable{
     private String grade;
     private double rawGrade;
     private String syllabus;
+    public int numAssignments;
 
 
 
@@ -105,6 +106,10 @@ public class course implements Parcelable{
 
     public ArrayList<Assignment> getAssignments(){
         return assignments;
+    }
+
+    public int getNumAssignments(){
+        return assignments.size();
     }
 
 
