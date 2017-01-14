@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import com.alex.homeworkplanner.PlannerContract.PlannerEntry;
 import java.util.ArrayList;
 
@@ -21,6 +23,11 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     public boolean classesRead;
     public static final int     DATABASE_VERSION  = 1;
     public static final String  DATABASE_NAME = "Planner.db";
+    public static final String Tag = "DATABAES: ";
+    public SQLiteDatabase writeDatabase;
+    public SQLiteDatabase readDatabase;
+    public boolean readOpen;
+    public boolean writeOpen;
 
 
 
@@ -29,6 +36,8 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
         planner = input;
         classesRead =false;
+        readOpen = false;
+        writeOpen = false;
         readInClasses();
 
     }
@@ -79,20 +88,44 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void saveAssignment(String classname, Assignment assignment){
-        SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(PlannerEntry.COLUMN_NAME_ASSIGNMENTS,assignment.getAssignmentName());
-        values.put(PlannerEntry.COLUMN_NAME_DUE_DATE,assignment.getDueDateS());
-        values.put(PlannerEntry.COLUMN_NAME_TYPE,assignment.getType());
-        values.put(PlannerEntry.COLUMN_NAME_PTS,assignment.getPtsWorth());
-
-        database.insert(classname,null,values);
-        database.close();
+    public void openForWriting(){
+        if(!writeOpen) {
+            writeDatabase = this.getWritableDatabase();
+        }
     }
 
-    //// TODO: 1/12/2017 FIX TO MAKE IT UPDATE INSTEAD OF ADD EVERYTHING.
+    public void openForReading(){
+        if(!readOpen) {
+            readDatabase = this.getReadableDatabase();
+        }
+    }
+
+    public void closeDatabase(){
+        if(writeDatabase.isOpen()){
+            writeDatabase.close();
+        }
+
+        if(readDatabase.isOpen()){
+            readDatabase.close();
+        }
+    }
+
+    public void saveAssignment(String classname, Assignment assignment){
+
+        if(writeOpen) {
+            ContentValues values = new ContentValues();
+            values.put(PlannerEntry.COLUMN_NAME_ASSIGNMENTS, assignment.getAssignmentName());
+            values.put(PlannerEntry.COLUMN_NAME_DUE_DATE, assignment.getDueDateS());
+            values.put(PlannerEntry.COLUMN_NAME_TYPE, assignment.getType());
+            values.put(PlannerEntry.COLUMN_NAME_PTS, assignment.getPtsWorth());
+            writeDatabase.insert(classname, null, values);
+        }else{
+            Log.d(Tag,"Database not open for writing");
+        }
+
+    }
+
+    //// TODO: 1/12/2017 **BROKEN** FIX TO MAKE IT UPDATE INSTEAD OF ADD EVERYTHING.
     public void updateDatabase(){
         //Gets the data repository in write mode
         SQLiteDatabase database = this.getWritableDatabase();
@@ -116,28 +149,55 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     }
 
     public Planner getDatabasePlanner(){
-        SQLiteDatabase database = this.getReadableDatabase();
         Planner retPlanner = new Planner();
-        Cursor cursor = database.rawQuery("SELECT * FROM class_names",null);
-        ArrayList<String> classes = new ArrayList<>();
-        while(cursor.moveToNext()){
-            classes.add(cursor.getString(Integer.valueOf(PlannerEntry._ID)));
-        }
-        cursor.moveToFirst();
+
+        if(readOpen) {
 
 
-        for(int i = 0; i < classes.size(); i++){
-            course tmpClass = new course(classes.get(i));
-            cursor = database.rawQuery("SELECT * FROM " + classes.get(i),null);
-            while(cursor.moveToNext()){
+            Cursor cursor = readDatabase.rawQuery("SELECT * FROM class_names", null);
+            ArrayList<String> classes = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                classes.add(cursor.getString(Integer.valueOf(PlannerEntry._ID)));
             }
+            cursor.moveToFirst();
+
+            String[] projection = {
+                    PlannerEntry.COLUMN_NAME_ASSIGNMENTS,
+                    PlannerEntry.COLUMN_NAME_DUE_DATE,
+                    PlannerEntry.COLUMN_NAME_TYPE,
+                    PlannerEntry.COLUMN_NAME_PTS,
+                    PlannerEntry._ID
+            };
+
+
+            for (int i = 0; i < classes.size(); i++) {
+                course tmpClass = new course(classes.get(i));
+                String name = "none";
+                String dueDate = "none";
+                String type = "none";
+                int pts = 0;
+
+                cursor = readDatabase.query(tmpClass.getClassName(), projection, null, null, null, null, null);
+                while (cursor.moveToNext()) {
+                    name = cursor.getString(cursor.getColumnIndexOrThrow(PlannerEntry.COLUMN_NAME_ASSIGNMENTS));
+                    dueDate = cursor.getString(cursor.getColumnIndexOrThrow(PlannerEntry.COLUMN_NAME_DUE_DATE));
+                    type = cursor.getString(cursor.getColumnIndexOrThrow(PlannerEntry.COLUMN_NAME_TYPE));
+                    pts = cursor.getInt(cursor.getColumnIndexOrThrow(PlannerEntry.COLUMN_NAME_PTS));
+                    tmpClass.addAssignment(new Assignment(name, dueDate, type, pts, false));
+                }
+                cursor.moveToFirst();
+                planner.addNewCourse(tmpClass);
+            }
+            cursor.close();
+
+        }else{
+            Log.d(Tag,"Database needs to be open for reading");
         }
 
 
         return retPlanner;
 
     }
-
 
 
 }
