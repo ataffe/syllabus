@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Created by Alexxx on 1/11/2017.
  */
 
-//// TODO: 1/12/2017 FINISH IMPLEMENTING NEDDED METHODS
+//// TODO: 1/12/2017 FINISH IMPLEMENTING NEEDED METHODS
 public class PlannerDBHelper extends SQLiteOpenHelper {
 
     public ArrayList<String> classes;
@@ -23,7 +23,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     public boolean classesRead;
     public static final int     DATABASE_VERSION  = 1;
     public static final String  DATABASE_NAME = "Planner.db";
-    public static final String Tag = "DATABAES: ";
+    public static final String Tag = "DATABASE: ";
     public SQLiteDatabase writeDatabase;
     public SQLiteDatabase readDatabase;
     public boolean readOpen;
@@ -125,7 +125,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
 
     }
 
-    //// TODO: 1/12/2017 **BROKEN** FIX TO MAKE IT UPDATE INSTEAD OF ADD EVERYTHING.
+    ///// TODO: 1/12/2017 **BROKEN** FIX TO MAKE IT UPDATE INSTEAD OF ADD EVERYTHING.
     public void updateDatabase(){
         //Gets the data repository in write mode
         SQLiteDatabase database = this.getWritableDatabase();

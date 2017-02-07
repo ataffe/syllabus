@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/addToHomeButton"
-            android:background="@mipmap/launcher_icon3"
+            android:background="@mipmap/calender_icon"
             android:onClick="addToHomepageNoSave"
             android:layout_marginLeft="5dp"/>
 

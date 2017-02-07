@@ -23,6 +23,7 @@ public class AddAssignment extends AppCompatActivity {
     public EditText dateText;
     public Planner organizer;
     public final String Tag = "ADD ASSIGNMENT - ";
+    public PlannerDBHelper dbHelper;
 
 
     @Override
@@ -32,6 +33,7 @@ public class AddAssignment extends AppCompatActivity {
         date = new int[3];
         organizer = new Planner();
         initUIElements();
+        dbHelper = new PlannerDBHelper(this,organizer);
 
     }
 
@@ -117,6 +119,8 @@ public class AddAssignment extends AppCompatActivity {
             newCourse.addAssignment(new Assignment(assignmentName, dueDate, assignmentType, Integer.valueOf(ptsWorth), isTest));
             organizer.addNewCourse(newCourse);
         }
+
+
 
     }
 
