@@ -6,47 +6,54 @@
     android:orientation="vertical"
     tools:context="com.alex.homeworkplanner.MainPage">
 
-    <android.support.v7.widget.Toolbar
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary">
+        android:layout_height="370dp"
+        android:id="@+id/toolbar_layout">
 
-        <RelativeLayout
+        <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/toolbar_layout">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/launcher_icon2"
-                android:onClick="mainToAdd"
-                android:background="?attr/colorPrimary"
-                android:contentDescription="@string/add_button_description"
-                android:id="@+id/add_assignment_icon"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/settings_icon"
-                android:background="?attr/colorPrimary"
-                android:contentDescription="@string/add_button_description"
-                android:id="@+id/settings_icon"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-        </RelativeLayout>
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:weightSum="1"
+            android:id="@+id/toolbar2">
 
         </android.support.v7.widget.Toolbar>
 
-    <CalendarView
-        android:id="@+id/main_calendar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.68" />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/settings_icon"
+            android:background="?attr/colorPrimary"
+            android:contentDescription="@string/add_button_description"
+            android:id="@+id/settings_icon"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@+id/toolbar2" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/launcher_icon2"
+            android:onClick="mainToAdd"
+            android:background="?attr/colorPrimary"
+            android:contentDescription="@string/add_button_description"
+            android:id="@+id/add_assignment_icon"
+            android:layout_alignBottom="@+id/toolbar2"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
+
+        <CalendarView
+            android:id="@+id/main_calendar"
+            android:layout_width="match_parent"
+            android:layout_height="359dp"
+            android:layout_below="@+id/toolbar2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
 
     <ExpandableListView
         android:layout_width="match_parent"

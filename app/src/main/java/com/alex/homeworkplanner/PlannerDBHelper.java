@@ -52,9 +52,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db){
-        if(classesRead) {
-            createTables(db);
-        }
+
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
@@ -88,19 +86,19 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void openForWriting(){
+    private void openForWriting(){
         if(!writeOpen) {
             writeDatabase = this.getWritableDatabase();
         }
     }
 
-    public void openForReading(){
+    private void openForReading(){
         if(!readOpen) {
             readDatabase = this.getReadableDatabase();
         }
     }
 
-    public void closeDatabase(){
+    private void closeDatabase(){
         if(writeDatabase.isOpen()){
             writeDatabase.close();
         }
@@ -112,16 +110,28 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
 
     public void saveAssignment(String classname, Assignment assignment){
 
-        if(writeOpen) {
+            openForWriting();
+
+            if(writeOpen){
+                classname = classname.toUpperCase();
+                Cursor cursor = writeDatabase.rawQuery("SELECT * FROM sqlite_master WHERE name= ? and type= ?", new String[] {classname, "table"});
+
+                //If the class already exists then insert the relevant information.
+                if(cursor.getCount() > 0 ){
+                    //TODO: add assignment information to the table
+                }
+
+
+                cursor.close();
+            }
+
             ContentValues values = new ContentValues();
             values.put(PlannerEntry.COLUMN_NAME_ASSIGNMENTS, assignment.getAssignmentName());
             values.put(PlannerEntry.COLUMN_NAME_DUE_DATE, assignment.getDueDateS());
             values.put(PlannerEntry.COLUMN_NAME_TYPE, assignment.getType());
             values.put(PlannerEntry.COLUMN_NAME_PTS, assignment.getPtsWorth());
             writeDatabase.insert(classname, null, values);
-        }else{
-            Log.d(Tag,"Database not open for writing");
-        }
+
 
     }
 
