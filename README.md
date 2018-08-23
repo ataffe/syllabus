@@ -1,2 +1,2 @@
 # syllabus^2
-Android application to organize homework assignments!
+Android application to organize homework assignments!(Not finished)
